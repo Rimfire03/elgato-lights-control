@@ -1,4 +1,4 @@
-# Exclude everything
+﻿# Exclude everything
 /*
 
 # Except for default project files
@@ -6,6 +6,9 @@
 !/build-aux
 !/cmake
 !/data
+!/docs
+!/installer
+!/tools
 !/src
 !.clang-format
 !.gersemirc
@@ -28,3 +31,4 @@
 # Release packaging
 /dist/
 /build_installer/
+

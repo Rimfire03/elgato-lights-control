@@ -1,5 +1,7 @@
 ﻿# Elgato Lights Control (plugin OBS)
 
+[![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-Donate-orange.svg?logo=buy-me-a-coffee&logoColor=white)](https://buymeacoffee.com/slide598b)
+
 Plugin natif OBS Studio (C++ / Qt6) qui pilote les lampes Elgato (Key Light, Key Light Air, Ring Light, Light Strip…)
 via leur API HTTP locale (port 9123, la même que celle d'Elgato Control Center).
 
@@ -14,6 +16,12 @@ via leur API HTTP locale (port 9123, la même que celle d'Elgato Control Center)
 
 Configuration enregistrée dans `%APPDATA%\obs-studio\plugin_config\obs-elgato-lights\config.json`.
 Le dock « Elgato Lights » apparaît dans OBS (menu *Docks*).
+
+## Soutenir le projet
+
+Si ce plugin vous est utile, vous pouvez m'offrir un café :
+
+<a href="https://buymeacoffee.com/slide598b" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" height="50"></a>
 
 ## Mises à jour
 

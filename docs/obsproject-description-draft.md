@@ -5,7 +5,7 @@
 
 **Nom de la ressource** : Elgato Lights Control
 **Catégorie** : OBS Studio Plugins
-**Version** : 1.0.3 | **Plateformes** : Windows (testé), macOS universel (compilé par la CI, non testé sur Mac réel)
+**Version** : 1.0.3 | **Plateformes** : Windows (testé), macOS universel (compilé par la CI, testé sur un autre poste Mac)
 **Licence** : GPL v2 ou ultérieure | **Code source** : https://github.com/Rimfire03/elgato-lights-control
 
 ## Description
@@ -35,7 +35,7 @@ events (streaming, recording, virtual camera, active scene).
 - Tested with two Elgato Key Lights on Windows. Other models (Key Light Air, Ring Light, Light Strip) use the same
   API but have not been tested; Light Strip color (hue/saturation) is not supported yet.
 - The group sliders do not reflect the current state of the member lights.
-- macOS build is produced by CI and has not been tested on real hardware. macOS 15+ asks for "Local Network"
+- The macOS build is produced by CI and was tested on a separate Mac. macOS 15+ asks for "Local Network"
   permission on first discovery.
 
 **Transparency about AI use**: this plugin was developed with the assistance of Claude Code (Anthropic), which wrote

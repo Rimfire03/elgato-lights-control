@@ -1,5 +1,8 @@
 #include "engine.hpp"
 
+#include <QEventLoop>
+#include <QTimer>
+
 #include <obs-frontend-api.h>
 #include <obs.h>
 
@@ -72,7 +75,9 @@ void Engine::setLight(const QString &lightId, const LightPatch &patch)
 		st.brightness = *patch.brightness;
 	if (patch.temperature)
 		st.temperature = *patch.temperature;
+	++pending_;
 	client_.apply(l->host, (quint16)l->port, patch, [this, lightId](bool ok) {
+		--pending_;
 		reachable_[lightId] = ok;
 		emit lightStateChanged(lightId, ok);
 	});
@@ -107,6 +112,10 @@ void Engine::runAction(const ActionDef &a)
 
 bool Engine::conditionValue(const RuleDef &r) const
 {
+	if (r.cond == "obs")
+		return obsOpen_;
+	if (r.cond == "obs_closing")
+		return obsClosing_;
 	if (r.cond == "streaming")
 		return streaming_;
 	if (r.cond == "recording")
@@ -161,6 +170,13 @@ void Engine::onFrontendEvent(int event)
 	case OBS_FRONTEND_EVENT_VIRTUALCAM_STOPPED:
 		virtualcam_ = false;
 		break;
+	case OBS_FRONTEND_EVENT_EXIT:
+		// Apply the "else" states now: OBS is about to close.
+		obsOpen_ = false;
+		obsClosing_ = true;
+		evaluateRules();
+		flushPending(2000);
+		return;
 	case OBS_FRONTEND_EVENT_SCENE_CHANGED:
 		syncObsState();
 		break;
@@ -171,4 +187,23 @@ void Engine::onFrontendEvent(int event)
 		return;
 	}
 	evaluateRules();
+}
+
+// Keeps the Qt event loop running until the pending light requests are done (or the timeout elapses).
+void Engine::flushPending(int timeoutMs)
+{
+	if (pending_ <= 0)
+		return;
+	QEventLoop loop;
+	QTimer timeout;
+	timeout.setSingleShot(true);
+	connect(&timeout, &QTimer::timeout, &loop, &QEventLoop::quit);
+	QTimer poll;
+	connect(&poll, &QTimer::timeout, &loop, [this, &loop]() {
+		if (pending_ <= 0)
+			loop.quit();
+	});
+	poll.start(25);
+	timeout.start(timeoutMs);
+	loop.exec();
 }

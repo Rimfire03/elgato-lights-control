@@ -18,7 +18,7 @@ events (streaming, recording, virtual camera, active scene).
 - Automatic discovery of Elgato lights on your LAN, or add a light by IP address
 - Per-light control: on/off, brightness (1–100 %), color temperature (2900–7000 K), rename, "Identify" (blinks the light)
 - Groups: control several lights at once
-- Automation rules: "if *streaming / recording / virtual camera is active / the active scene is X* then set a light or a
+- Automation rules: "if *streaming / recording / virtual camera is active / the active scene is X / OBS is open / OBS is closing* then set a light or a
   group to a given state", with an optional "else" state applied when the condition becomes false
 - Startup update check (Windows: one-click update; macOS: opens the release page). Can be disabled in the dock.
 

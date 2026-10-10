@@ -40,6 +40,8 @@ static void frontendEvent(enum obs_frontend_event event, void *)
 		return;
 	}
 	if (event == OBS_FRONTEND_EVENT_EXIT) {
+		if (g_engine)
+			g_engine->onFrontendEvent((int)event);
 		// Detach before OBS tears the main window (and our dock) down.
 		obs_frontend_remove_event_callback(frontendEvent, nullptr);
 		return;

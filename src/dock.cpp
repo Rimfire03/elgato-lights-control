@@ -125,6 +125,8 @@ RuleDialog::RuleDialog(Engine &engine, const RuleDef &rule, QWidget *parent)
 	form->addRow(U("Nom"), name_);
 
 	cond_ = new QComboBox();
+	cond_->addItem(U("OBS est ouvert"), "obs");
+	cond_->addItem(U("OBS est en cours de fermeture"), "obs_closing");
 	cond_->addItem(U("Le stream est en cours"), "streaming");
 	cond_->addItem(U("L'enregistrement est en cours"), "recording");
 	cond_->addItem(U("La caméra virtuelle est active"), "virtualcam");
@@ -144,7 +146,7 @@ RuleDialog::RuleDialog(Engine &engine, const RuleDef &rule, QWidget *parent)
 	tl->addWidget(buildAction(then_, rule.thenAction));
 	root->addWidget(thenBox);
 
-	hasElse_ = new QCheckBox(U("Sinon (quand la condition redevient fausse)"));
+	hasElse_ = new QCheckBox(U("Sinon (quand la condition redevient fausse, ex. OBS se ferme)"));
 	hasElse_->setChecked(rule.hasElse);
 	root->addWidget(hasElse_);
 	elseBox_ = buildAction(else_, rule.elseAction);
@@ -560,7 +562,11 @@ void ElgatoDock::rebuildRules()
 	rulesList_->clear();
 	for (const RuleDef &r : engine_.config().rules) {
 		QString cond;
-		if (r.cond == "streaming")
+		if (r.cond == "obs")
+			cond = U("OBS est ouvert");
+		else if (r.cond == "obs_closing")
+			cond = U("OBS se ferme");
+		else if (r.cond == "streaming")
 			cond = U("stream en cours");
 		else if (r.cond == "recording")
 			cond = U("enregistrement en cours");

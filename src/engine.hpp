@@ -41,6 +41,7 @@ signals:
 
 private:
 	void runAction(const ActionDef &a);
+	void flushPending(int timeoutMs);
 	void syncObsState();
 	bool conditionValue(const RuleDef &r) const;
 
@@ -52,5 +53,8 @@ private:
 	bool streaming_ = false;
 	bool recording_ = false;
 	bool virtualcam_ = false;
+	bool obsOpen_ = true;     // the plugin only runs while OBS is open
+	bool obsClosing_ = false; // true once OBS announced it is exiting
+	int pending_ = 0;         // in-flight light requests
 	QString scene_;
 };

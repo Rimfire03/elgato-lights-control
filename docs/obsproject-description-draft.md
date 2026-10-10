@@ -5,7 +5,7 @@
 
 **Nom de la ressource** : Elgato Lights Control
 **Catégorie** : OBS Studio Plugins
-**Version** : 1.0.0 | **Plateformes** : Windows (testé), macOS universel (compilé par la CI, non testé sur Mac réel)
+**Version** : 1.0.3 | **Plateformes** : Windows (testé), macOS universel (compilé par la CI, non testé sur Mac réel)
 **Licence** : GPL v2 ou ultérieure | **Code source** : https://github.com/Rimfire03/elgato-lights-control
 
 ## Description
@@ -15,10 +15,11 @@ the same lights you manage with Elgato Control Center. It also lets you trigger 
 events (streaming, recording, virtual camera, active scene).
 
 **Features**
-- Automatic discovery of Elgato lights on your LAN, or add a light by IP address
+- Automatic discovery of Elgato lights on your LAN, or add a light by IP address. Lights are tracked by serial
+  number: if a light's IP address changes (DHCP), it is found again automatically and your groups and rules keep working
 - Per-light control: on/off, brightness (1–100 %), color temperature (2900–7000 K), rename, "Identify" (blinks the light)
 - Groups: control several lights at once
-- Automation rules: "if *streaming / recording / virtual camera is active / the active scene is X / OBS opens / OBS is closing* then set a light or a
+- Automation rules: "if *streaming / recording / streaming or recording / virtual camera is active / the active scene is X / OBS opens / OBS is closing* then set a light or a
   group to a given state", with an optional "else" state applied when the condition becomes false
 - Startup update check (Windows: one-click update; macOS: opens the release page). Can be disabled in the dock.
 

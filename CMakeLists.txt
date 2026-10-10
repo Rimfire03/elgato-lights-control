@@ -34,8 +34,20 @@ if(ENABLE_QT)
   )
 endif()
 
-target_sources(${CMAKE_PROJECT_NAME} PRIVATE src/plugin-main.cpp src/elgato-api.cpp src/elgato-api.hpp src/config.cpp src/config.hpp src/engine.cpp src/engine.hpp src/dock.cpp src/dock.hpp src/updater.cpp src/updater.hpp)
+target_sources(
+  ${CMAKE_PROJECT_NAME}
+  PRIVATE
+    src/plugin-main.cpp
+    src/elgato-api.cpp
+    src/elgato-api.hpp
+    src/config.cpp
+    src/config.hpp
+    src/engine.cpp
+    src/engine.hpp
+    src/dock.cpp
+    src/dock.hpp
+    src/updater.cpp
+    src/updater.hpp
+)
 
 set_target_properties_plugin(${CMAKE_PROJECT_NAME} PROPERTIES OUTPUT_NAME ${_name})
-
-

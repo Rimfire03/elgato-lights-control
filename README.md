@@ -15,6 +15,16 @@ via leur API HTTP locale (port 9123, la même que celle d'Elgato Control Center)
 Configuration enregistrée dans `%APPDATA%\obs-studio\plugin_config\obs-elgato-lights\config.json`.
 Le dock « Elgato Lights » apparaît dans OBS (menu *Docks*).
 
+## Mises à jour
+
+Au démarrage d'OBS, le plugin interroge la dernière release GitHub (`Rimfire03/OBS-elgato`). Si une version plus
+récente existe, une fenêtre propose de mettre à jour (ou d'ignorer cette version). Sous Windows, l'installateur est
+téléchargé (SHA-256 vérifié), puis il attend la fermeture d'OBS, remplace le plugin et relance OBS. Sous macOS, la
+page de la release s'ouvre. Désactivable dans le dock (case « Vérifier les mises à jour »).
+
+La release doit contenir l'asset `Install-Elgato-Lights-<version>.exe` (généré dans `dist\` par
+`tools\Package-Release.ps1`) et le dépôt doit être public pour que l'API GitHub réponde sans authentification.
+
 ## macOS
 
 Le code est portable (Qt6 + API OBS) ; le plugin se compile en binaire universel (arm64 + x86_64) avec le preset
@@ -44,6 +54,7 @@ cmake --preset windows-x64
 cmake --build --preset windows-x64 --config RelWithDebInfo
 ```
 
-Installation : copier `build_x64\rundir\RelWithDebInfo\obs-elgato-lights\` dans
-`C:\Program Files\obs-studio\` (le dossier contient `obs-plugins\64bit\*.dll`), puis relancer OBS.
+Release (zip + installateur signé) : `tools\Package-Release.ps1` → `dist\`.
+Installation : l'installateur copie la DLL dans `C:\ProgramData\obs-studio\plugins\obs-elgato-lights\bin\64bit\` et
+crée une entrée « Ajout/Suppression de programmes » (désinstallation propre).
 

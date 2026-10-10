@@ -5,11 +5,100 @@
 
 #include <obs-frontend-api.h>
 #include <obs.h>
+#include <plugin-support.h>
+
+static constexpr int kRescanMinIntervalMs = 30000;
 
 Engine::Engine(QObject *parent) : QObject(parent)
 {
 	cfg_.load();
 	syncObsState();
+	connect(&scanner_, &ElgatoClient::lightFound, this,
+		[this](const DiscoveredLight &d) { reconcileDiscovered(d); });
+	connect(&scanner_, &ElgatoClient::scanFinished, this, [this]() { rescanning_ = false; });
+}
+
+bool Engine::reconcileDiscovered(const DiscoveredLight &d)
+{
+	LightDef *match = nullptr;
+	if (!d.serial.isEmpty()) {
+		for (LightDef &l : cfg_.lights)
+			if (l.serial == d.serial) {
+				match = &l;
+				break;
+			}
+	}
+	if (!match) {
+		for (LightDef &l : cfg_.lights)
+			if (l.host == d.host && (l.serial.isEmpty() || d.serial.isEmpty() || l.serial == d.serial)) {
+				match = &l;
+				break;
+			}
+	}
+	if (!match)
+		return false;
+
+	bool changed = false;
+	const bool moved = match->host != d.host || match->port != (int)d.port;
+	if (moved) {
+		obs_log(LOG_INFO, "light '%s' moved: %s -> %s", match->name.toUtf8().constData(),
+			match->host.toUtf8().constData(), d.host.toUtf8().constData());
+		match->host = d.host;
+		match->port = d.port;
+		changed = true;
+	}
+	if (match->serial.isEmpty() && !d.serial.isEmpty()) {
+		match->serial = d.serial;
+		changed = true;
+	}
+	if (changed) {
+		const QString id = match->id; // save() may not invalidate, but do not keep the pointer around
+		save();
+		if (moved) {
+			reachable_[id] = true;
+			auto it = failedPatch_.find(id);
+			if (it != failedPatch_.end()) {
+				const LightPatch p = it.value();
+				failedPatch_.erase(it);
+				setLight(id, p); // deliver the action that was lost while the IP was stale
+			} else {
+				refreshLight(id);
+			}
+		}
+	}
+	return true;
+}
+
+void Engine::forgetLight(const QString &lightId)
+{
+	states_.remove(lightId);
+	reachable_.remove(lightId);
+	failedPatch_.remove(lightId);
+}
+
+void Engine::onLightUnreachable(const QString &lightId, const LightPatch *failed)
+{
+	if (failed) {
+		LightPatch &acc = failedPatch_[lightId];
+		if (failed->on)
+			acc.on = failed->on;
+		if (failed->brightness)
+			acc.brightness = failed->brightness;
+		if (failed->temperature)
+			acc.temperature = failed->temperature;
+	}
+	if (obsClosing_ || rescanning_)
+		return;
+	const LightDef *l = cfg_.light(lightId);
+	if (!l || l->serial.isEmpty())
+		return; // unknown hardware id: cannot recognise it elsewhere
+	if (rescanClock_.isValid() && rescanClock_.elapsed() < kRescanMinIntervalMs)
+		return;
+	obs_log(LOG_INFO, "light '%s' unreachable at %s: scanning the network", l->name.toUtf8().constData(),
+		l->host.toUtf8().constData());
+	rescanning_ = true;
+	rescanClock_.restart();
+	scanner_.scanNetwork();
 }
 
 void Engine::syncObsState()
@@ -54,6 +143,25 @@ void Engine::refreshLight(const QString &lightId)
 		if (ok)
 			states_[lightId] = st;
 		emit lightStateChanged(lightId, ok);
+		if (!ok) {
+			onLightUnreachable(lightId, nullptr);
+			return;
+		}
+		const LightDef *cur = cfg_.light(lightId);
+		if (cur && cur->serial.isEmpty()) {
+			// Migration / first contact: remember the hardware id for later re-discovery.
+			client_.fetchInfo(cur->host, (quint16)cur->port,
+					  [this, lightId](bool got, DiscoveredLight info) {
+						  if (!got)
+							  return;
+						  for (LightDef &x : cfg_.lights)
+							  if (x.id == lightId && x.serial.isEmpty()) {
+								  x.serial = info.serial;
+								  cfg_.save();
+								  return;
+							  }
+					  });
+		}
 	});
 }
 
@@ -76,10 +184,14 @@ void Engine::setLight(const QString &lightId, const LightPatch &patch)
 	if (patch.temperature)
 		st.temperature = *patch.temperature;
 	++pending_;
-	client_.apply(l->host, (quint16)l->port, patch, [this, lightId](bool ok) {
+	client_.apply(l->host, (quint16)l->port, patch, [this, lightId, patch](bool ok) {
 		--pending_;
 		reachable_[lightId] = ok;
 		emit lightStateChanged(lightId, ok);
+		if (ok)
+			failedPatch_.remove(lightId);
+		else
+			onLightUnreachable(lightId, &patch);
 	});
 }
 

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <QElapsedTimer>
 #include <QHash>
 #include <QObject>
 
@@ -34,6 +35,12 @@ public:
 
 	QStringList sceneNames() const;
 
+	// Matches a discovered device with a configured light (by serial, else by IP). Updates the
+	// stored IP when the light moved. Returns true if it belongs to an existing light.
+	bool reconcileDiscovered(const DiscoveredLight &d);
+	// Drops cached runtime state of a removed light.
+	void forgetLight(const QString &lightId);
+
 signals:
 	void configChanged();
 	void lightStateChanged(const QString &lightId, bool reachable);
@@ -44,9 +51,14 @@ private:
 	void flushPending(int timeoutMs);
 	void syncObsState();
 	bool conditionValue(const RuleDef &r) const;
+	void onLightUnreachable(const QString &lightId, const LightPatch *failed);
 
 	Config cfg_;
 	ElgatoClient client_;
+	ElgatoClient scanner_; // background re-discovery (never adds new lights)
+	QElapsedTimer rescanClock_;
+	bool rescanning_ = false;
+	QHash<QString, LightPatch> failedPatch_; // actions that could not be delivered (light unreachable)
 	QHash<QString, LightState> states_;
 	QHash<QString, bool> reachable_;
 	QHash<QString, int> ruleLast_; // ruleId -> 0/1

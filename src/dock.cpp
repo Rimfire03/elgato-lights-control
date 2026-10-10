@@ -323,14 +323,14 @@ QWidget *ElgatoDock::buildLightsTab()
 		scanLabel_->setText(U("Recherche terminée."));
 	});
 	connect(&engine_.client(), &ElgatoClient::lightFound, this, [this](const DiscoveredLight &d) {
-		for (const LightDef &l : engine_.config().lights)
-			if (l.host == d.host)
-				return;
+		if (engine_.reconcileDiscovered(d))
+			return; // already known (same serial, possibly with a new IP)
 		LightDef l;
 		l.id = Config::newId();
 		l.name = d.name;
 		l.host = d.host;
 		l.port = d.port;
+		l.serial = d.serial;
 		engine_.config().lights.append(l);
 		engine_.save();
 		engine_.refreshLight(l.id);
@@ -415,12 +415,18 @@ void ElgatoDock::rebuildLights()
 			}
 		});
 		connect(remove, &QPushButton::clicked, this, [this, id]() {
-			auto &lights = engine_.config().lights;
-			lights.erase(std::remove_if(lights.begin(), lights.end(),
-						    [&](const LightDef &x) { return x.id == id; }),
-				     lights.end());
-			for (GroupDef &g : engine_.config().groups)
-				g.lightIds.removeAll(id);
+			const LightDef *light = engine_.config().light(id);
+			const QString name = light ? light->name : QString();
+			const int nRules = engine_.config().rulesUsingLight(id);
+			QString msg =
+				U("Supprimer la lumière « %1 » ?\n\nElle sera retirée de tous les groupes.").arg(name);
+			if (nRules > 0)
+				msg += U("\n%1 automatisation(s) qui la ciblent seront supprimée(s) ou modifiée(s).")
+					       .arg(nRules);
+			if (QMessageBox::question(this, U("Supprimer la lumière"), msg) != QMessageBox::Yes)
+				return;
+			engine_.config().removeLight(id);
+			engine_.forgetLight(id);
 			engine_.save();
 		});
 	}

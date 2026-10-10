@@ -69,6 +69,28 @@ void ElgatoClient::apply(const QString &host, quint16 port, const LightPatch &pa
 	});
 }
 
+void ElgatoClient::fetchInfo(const QString &host, quint16 port, std::function<void(bool, DiscoveredLight)> cb)
+{
+	QNetworkRequest req(QUrl(QString("http://%1:%2/elgato/accessory-info").arg(host).arg(port)));
+	req.setTransferTimeout(3000);
+	QNetworkReply *reply = nam_.get(req);
+	connect(reply, &QNetworkReply::finished, this, [reply, cb, host, port]() {
+		DiscoveredLight d;
+		d.host = host;
+		d.port = port;
+		bool ok = false;
+		if (reply->error() == QNetworkReply::NoError) {
+			const QJsonObject o = QJsonDocument::fromJson(reply->readAll()).object();
+			d.serial = o.value("serialNumber").toString();
+			d.name = o.value("displayName").toString();
+			ok = !d.serial.isEmpty();
+		}
+		reply->deleteLater();
+		if (cb)
+			cb(ok, d);
+	});
+}
+
 void ElgatoClient::probe(const QString &host)
 {
 	QNetworkRequest req(QUrl(QString("http://%1:9123/elgato/accessory-info").arg(host)));

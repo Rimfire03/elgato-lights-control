@@ -40,6 +40,9 @@ public:
 	void apply(const QString &host, quint16 port, const LightPatch &patch,
 		   std::function<void(bool ok)> cb = nullptr);
 
+	// Reads /elgato/accessory-info (serial number, display name).
+	void fetchInfo(const QString &host, quint16 port, std::function<void(bool ok, DiscoveredLight info)> cb);
+
 	// Scans every local IPv4 /24 subnet for devices answering on port 9123.
 	void scanNetwork();
 

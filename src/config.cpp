@@ -42,6 +42,35 @@ const GroupDef *Config::group(const QString &id) const
 	return nullptr;
 }
 
+static bool targetsLight(const ActionDef &a, const QString &id)
+{
+	return a.targetType == "light" && a.targetId == id;
+}
+
+int Config::rulesUsingLight(const QString &id) const
+{
+	int n = 0;
+	for (const RuleDef &r : rules)
+		if (targetsLight(r.thenAction, id) || (r.hasElse && targetsLight(r.elseAction, id)))
+			++n;
+	return n;
+}
+
+void Config::removeLight(const QString &id)
+{
+	for (int i = lights.size() - 1; i >= 0; --i)
+		if (lights[i].id == id)
+			lights.removeAt(i);
+	for (GroupDef &g : groups)
+		g.lightIds.removeAll(id);
+	for (int i = rules.size() - 1; i >= 0; --i) {
+		if (targetsLight(rules[i].thenAction, id))
+			rules.removeAt(i);
+		else if (rules[i].hasElse && targetsLight(rules[i].elseAction, id))
+			rules[i].hasElse = false;
+	}
+}
+
 static QJsonObject actionToJson(const ActionDef &a)
 {
 	return QJsonObject{{"targetType", a.targetType},
@@ -70,7 +99,11 @@ void Config::save() const
 
 	QJsonArray la, ga, ra;
 	for (const LightDef &l : lights)
-		la.append(QJsonObject{{"id", l.id}, {"name", l.name}, {"host", l.host}, {"port", l.port}});
+		la.append(QJsonObject{{"id", l.id},
+				      {"name", l.name},
+				      {"host", l.host},
+				      {"port", l.port},
+				      {"serial", l.serial}});
 	for (const GroupDef &g : groups)
 		ga.append(QJsonObject{{"id", g.id},
 				      {"name", g.name},
@@ -117,6 +150,7 @@ void Config::load()
 		l.name = o.value("name").toString();
 		l.host = o.value("host").toString();
 		l.port = o.value("port").toInt(9123);
+		l.serial = o.value("serial").toString();
 		if (!l.id.isEmpty())
 			lights.append(l);
 	}

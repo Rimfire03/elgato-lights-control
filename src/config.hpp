@@ -9,6 +9,7 @@ struct LightDef {
 	QString name;
 	QString host;
 	int port = 9123;
+	QString serial; // stable hardware id: lets us find the light again when its IP changes
 };
 
 struct GroupDef {
@@ -50,6 +51,12 @@ struct Config {
 
 	const LightDef *light(const QString &id) const;
 	const GroupDef *group(const QString &id) const;
+
+	// Rules whose "then" or "else" action targets this light directly.
+	int rulesUsingLight(const QString &id) const;
+	// Removes the light everywhere: groups, and the rules that act on it (a rule whose
+	// "then" targets it is deleted; one whose "else" targets it loses the "else").
+	void removeLight(const QString &id);
 
 	void load();
 	void save() const;

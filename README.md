@@ -9,6 +9,8 @@ via leur API HTTP locale (port 9123, la même que celle d'Elgato Control Center)
 
 - **Lumières** : recherche automatique sur le réseau local (ou ajout par IP), puis pour chaque lampe : allumée/éteinte,
   luminosité (1–100 %), température (2900–7000 K), renommer, identifier (clignote), supprimer.
+  Si l'adresse IP d'une lampe change (DHCP), elle est retrouvée automatiquement grâce à son numéro de série ; groupes
+  et automatisations restent valides. Supprimer une lampe la retire aussi des groupes et des automatisations.
 - **Groupes** : regroupe plusieurs lampes et les pilote ensemble.
 - **Automatisations** : « si <condition> alors <lampe/groupe> <état> », avec « sinon » optionnel.
   Conditions : OBS s'ouvre, OBS est en cours de fermeture, stream en cours, enregistrement en cours, caméra virtuelle active, scène active = X.

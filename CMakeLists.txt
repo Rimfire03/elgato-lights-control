@@ -46,6 +46,11 @@ target_sources(
     src/engine.hpp
     src/dock.cpp
     src/dock.hpp
+    src/patch-controls.cpp
+    src/patch-controls.hpp
+    src/rule-dialog.cpp
+    src/rule-dialog.hpp
+    src/ui-util.hpp
     src/updater.cpp
     src/updater.hpp
     src/http.cpp

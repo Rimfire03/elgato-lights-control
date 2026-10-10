@@ -1,75 +1,16 @@
 #pragma once
 
-#include <QCheckBox>
-#include <QComboBox>
-#include <QDialog>
 #include <QHash>
 #include <QLabel>
-#include <QLineEdit>
 #include <QListWidget>
 #include <QPushButton>
-#include <QSlider>
-#include <QSpinBox>
-#include <QTimer>
 #include <QVBoxLayout>
 #include <QWidget>
 
 #include "engine.hpp"
+#include "patch-controls.hpp"
 
-// On/off checkbox + brightness slider + color temperature slider. Emits a patch on user change.
-class PatchControls : public QWidget {
-	Q_OBJECT
-public:
-	explicit PatchControls(QWidget *parent = nullptr);
-	void setState(const LightState &st, bool reachable);
-
-signals:
-	void patch(const LightPatch &p);
-
-private:
-	void queue(const LightPatch &p);
-	void flush();
-
-	QCheckBox *on_;
-	QSlider *brightness_;
-	QSlider *kelvin_;
-	QLabel *brightnessLabel_;
-	QLabel *kelvinLabel_;
-	QLabel *status_;
-	QTimer timer_;
-	LightPatch pending_;
-};
-
-// Editor for one automation rule.
-class RuleDialog : public QDialog {
-	Q_OBJECT
-public:
-	RuleDialog(Engine &engine, const RuleDef &rule, QWidget *parent = nullptr);
-	RuleDef result() const;
-
-private:
-	struct ActionEditor {
-		QComboBox *target = nullptr;
-		QComboBox *onMode = nullptr;
-		QCheckBox *useBrightness = nullptr;
-		QSpinBox *brightness = nullptr;
-		QCheckBox *useKelvin = nullptr;
-		QSpinBox *kelvin = nullptr;
-	};
-	QWidget *buildAction(ActionEditor &ed, const ActionDef &a);
-	ActionDef readAction(const ActionEditor &ed) const;
-
-	Engine &engine_;
-	RuleDef rule_;
-	QLineEdit *name_;
-	QComboBox *cond_;
-	QComboBox *scene_;
-	ActionEditor then_;
-	QCheckBox *hasElse_;
-	QWidget *elseBox_;
-	ActionEditor else_;
-};
-
+// The "Elgato Lights" dock: lights, groups and automation rules tabs.
 class ElgatoDock : public QWidget {
 	Q_OBJECT
 public:
@@ -79,12 +20,22 @@ private:
 	QWidget *buildLightsTab();
 	QWidget *buildGroupsTab();
 	QWidget *buildRulesTab();
+	QWidget *buildFooter();
 
 	void rebuildLights();
 	void rebuildGroups();
 	void rebuildRules();
 
+	void addLightBox(const LightDef &light);
+	void addGroupBox(const GroupDef &group);
+
 	void addManualLight();
+	void addDiscoveredLight(const DiscoveredLight &d);
+	void identifyLight(const QString &lightId);
+	void renameLight(const QString &lightId);
+	void confirmRemoveLight(const QString &lightId);
+	void setGroupMember(const QString &groupId, const QString &lightId, bool member);
+	void removeGroup(const QString &groupId);
 	void editRule(int index); // -1 = new
 
 	Engine &engine_;

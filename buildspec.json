@@ -1,4 +1,4 @@
-{
+﻿{
     "dependencies": {
         "obs-studio": {
             "version": "31.1.1",
@@ -38,7 +38,7 @@
     },
     "name": "obs-elgato-lights",
     "displayName": "Elgato Lights Control",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "author": "TomLine prod&co",
     "website": "https://github.com/Rimfire03/elgato-lights-control",
     "email": "slide598@gmail.com"

@@ -15,6 +15,26 @@ via leur API HTTP locale (port 9123, la même que celle d'Elgato Control Center)
 Configuration enregistrée dans `%APPDATA%\obs-studio\plugin_config\obs-elgato-lights\config.json`.
 Le dock « Elgato Lights » apparaît dans OBS (menu *Docks*).
 
+## macOS
+
+Le code est portable (Qt6 + API OBS) ; le plugin se compile en binaire universel (arm64 + x86_64) avec le preset
+`macos` (Xcode 16+, CMake ≥ 3.28) ou via la CI GitHub Actions (`.github/workflows`, job `macos-build`),
+qui produit un installeur `.pkg`.
+
+```bash
+cmake --preset macos
+cmake --build --preset macos --config RelWithDebInfo
+```
+
+Installation manuelle : copier `obs-elgato-lights.plugin` dans
+`~/Library/Application Support/obs-studio/plugins/`, puis relancer OBS.
+
+Notes macOS :
+- Le plugin n'est pas signé/notarisé tant que les secrets Apple Developer (`MACOS_SIGNING_*`) ne sont pas
+  configurés dans le dépôt GitHub ; passer `codesign`/`notarize` à `true` dans `build-project.yaml` ensuite.
+  Sans signature, retirer la quarantaine : `xattr -dr com.apple.quarantine <plugin ou .pkg>`.
+- macOS 15+ demande l'autorisation « Réseau local » à OBS à la première recherche de lampes.
+
 ## Compilation (Windows)
 
 Prérequis : Visual Studio 2022 (ou Build Tools) avec « Développement Desktop en C++ », CMake ≥ 3.28.

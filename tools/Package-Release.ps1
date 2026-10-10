@@ -1,4 +1,4 @@
-﻿<#
+<#
 .SYNOPSIS
     Prepare l'archive de release (build + signature + installateur + zip) dans dist\. Ne publie rien.
 
@@ -35,9 +35,8 @@ $version = (Get-Content (Join-Path $root "buildspec.json") -Raw | ConvertFrom-Js
 Write-Host "== Version $version =="
 
 # 1. Plugin
-if (-not (Test-Path (Join-Path $root "build_x64\CMakeCache.txt"))) {
-    Invoke-Native $cmake @("--preset", "windows-x64")
-}
+# Toujours reconfigurer : la version (buildspec.json) est figee dans plugin-support.c a la configuration.
+Invoke-Native $cmake @("--preset", "windows-x64")
 Invoke-Native $cmake @("--build", "--preset", "windows-x64", "--config", "RelWithDebInfo")
 $dll = Join-Path $root "build_x64\RelWithDebInfo\obs-elgato-lights.dll"
 if (-not (Test-Path $dll)) { throw "DLL introuvable : $dll" }

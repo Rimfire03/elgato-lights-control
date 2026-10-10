@@ -11,6 +11,8 @@
 
 #include <algorithm>
 
+#include <plugin-support.h>
+
 static QString U(const char *s)
 {
 	return QString::fromUtf8(s);
@@ -256,7 +258,15 @@ ElgatoDock::ElgatoDock(Engine &engine, QWidget *parent) : QWidget(parent), engin
 		engine_.config().checkUpdates = on;
 		engine_.config().save();
 	});
-	root->addWidget(updates);
+
+	// Bottom row: update checkbox on the left, plugin version (V.x.x.x) in the bottom-right corner.
+	auto *bottom = new QHBoxLayout();
+	bottom->addWidget(updates);
+	bottom->addStretch();
+	auto *versionLabel = new QLabel(QString("V.%1").arg(QString::fromUtf8(PLUGIN_VERSION)));
+	versionLabel->setStyleSheet("color: gray;");
+	bottom->addWidget(versionLabel);
+	root->addLayout(bottom);
 
 	connect(&engine_, &Engine::configChanged, this, [this]() {
 		rebuildLights();

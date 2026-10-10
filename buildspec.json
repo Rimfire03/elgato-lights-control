@@ -38,7 +38,7 @@
     },
     "name": "obs-elgato-lights",
     "displayName": "Elgato Lights Control",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "author": "TomLine prod&co",
     "website": "https://github.com/Rimfire03/elgato-lights-control",
     "email": "slide598@gmail.com"

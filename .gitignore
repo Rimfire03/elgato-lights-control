@@ -24,3 +24,7 @@
 
 # Exclude CMake build number cache
 /cmake/.CMakeBuildNumber
+
+# Release packaging
+/dist/
+/build_installer/

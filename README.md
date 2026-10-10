@@ -1,4 +1,4 @@
-﻿# Elgato Lights Control (plugin OBS)
+# Elgato Lights Control (plugin OBS)
 
 [![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-Donate-orange.svg?logo=buy-me-a-coffee&logoColor=white)](https://buymeacoffee.com/slide598b)
 

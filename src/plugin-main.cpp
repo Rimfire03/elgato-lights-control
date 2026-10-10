@@ -1,4 +1,4 @@
-﻿/*
+/*
 Elgato Lights Control - OBS plugin
 Controls Elgato Key Light / Light Strip devices (same ones as Elgato Control Center)
 through their local HTTP API, with groups and event-driven automation rules.

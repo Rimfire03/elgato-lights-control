@@ -1,4 +1,4 @@
-﻿#include "updater.hpp"
+#include "updater.hpp"
 
 #include <QCryptographicHash>
 #include <QDesktopServices>

@@ -131,6 +131,7 @@ RuleDialog::RuleDialog(Engine &engine, const RuleDef &rule, QWidget *parent)
 	cond_->addItem(U("OBS est en cours de fermeture"), "obs_closing");
 	cond_->addItem(U("Le stream est en cours"), "streaming");
 	cond_->addItem(U("L'enregistrement est en cours"), "recording");
+	cond_->addItem(U("Le stream OU l'enregistrement est en cours"), "stream_or_record");
 	cond_->addItem(U("La caméra virtuelle est active"), "virtualcam");
 	cond_->addItem(U("La scène active est…"), "scene");
 	cond_->setCurrentIndex(std::max(0, cond_->findData(rule.cond)));
@@ -586,6 +587,8 @@ void ElgatoDock::rebuildRules()
 			cond = U("stream en cours");
 		else if (r.cond == "recording")
 			cond = U("enregistrement en cours");
+		else if (r.cond == "stream_or_record")
+			cond = U("stream ou enregistrement en cours");
 		else if (r.cond == "virtualcam")
 			cond = U("caméra virtuelle active");
 		else

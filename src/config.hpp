@@ -28,7 +28,7 @@ struct ActionDef {
 	int temperature = -1; // mired
 };
 
-// cond: "obs" | "obs_closing" | "streaming" | "recording" | "virtualcam" | "scene"
+// cond: "obs" | "obs_closing" | "streaming" | "recording" | "stream_or_record" | "virtualcam" | "scene"
 struct RuleDef {
 	QString id;
 	QString name;

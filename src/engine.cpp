@@ -232,6 +232,8 @@ bool Engine::conditionValue(const RuleDef &r) const
 		return streaming_;
 	if (r.cond == "recording")
 		return recording_;
+	if (r.cond == "stream_or_record")
+		return streaming_ || recording_;
 	if (r.cond == "virtualcam")
 		return virtualcam_;
 	if (r.cond == "scene")

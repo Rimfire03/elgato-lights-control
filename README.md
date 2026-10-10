@@ -11,7 +11,7 @@ via leur API HTTP locale (port 9123, la même que celle d'Elgato Control Center)
   luminosité (1–100 %), température (2900–7000 K), renommer, identifier (clignote), supprimer.
 - **Groupes** : regroupe plusieurs lampes et les pilote ensemble.
 - **Automatisations** : « si <condition> alors <lampe/groupe> <état> », avec « sinon » optionnel.
-  Conditions : OBS est ouvert, OBS est en cours de fermeture, stream en cours, enregistrement en cours, caméra virtuelle active, scène active = X.
+  Conditions : OBS s'ouvre, OBS est en cours de fermeture, stream en cours, enregistrement en cours, caméra virtuelle active, scène active = X.
   Un état = allumer/éteindre/inchangé + luminosité et/ou température optionnelles.
 
 Configuration enregistrée dans `%APPDATA%\obs-studio\plugin_config\obs-elgato-lights\config.json`.

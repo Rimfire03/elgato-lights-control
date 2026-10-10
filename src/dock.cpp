@@ -125,7 +125,7 @@ RuleDialog::RuleDialog(Engine &engine, const RuleDef &rule, QWidget *parent)
 	form->addRow(U("Nom"), name_);
 
 	cond_ = new QComboBox();
-	cond_->addItem(U("OBS est ouvert"), "obs");
+	cond_->addItem(U("OBS s'ouvre"), "obs");
 	cond_->addItem(U("OBS est en cours de fermeture"), "obs_closing");
 	cond_->addItem(U("Le stream est en cours"), "streaming");
 	cond_->addItem(U("L'enregistrement est en cours"), "recording");
@@ -563,7 +563,7 @@ void ElgatoDock::rebuildRules()
 	for (const RuleDef &r : engine_.config().rules) {
 		QString cond;
 		if (r.cond == "obs")
-			cond = U("OBS est ouvert");
+			cond = U("OBS s'ouvre");
 		else if (r.cond == "obs_closing")
 			cond = U("OBS se ferme");
 		else if (r.cond == "streaming")

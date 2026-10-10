@@ -48,6 +48,12 @@ target_sources(
     src/dock.hpp
     src/updater.cpp
     src/updater.hpp
+    src/http.cpp
+    src/http.hpp
 )
+
+# libcurl (from obs-deps; the runtime DLL ships with OBS) for the update check
+find_package(CURL REQUIRED)
+target_link_libraries(${CMAKE_PROJECT_NAME} PRIVATE CURL::libcurl)
 
 set_target_properties_plugin(${CMAKE_PROJECT_NAME} PROPERTIES OUTPUT_NAME ${_name})

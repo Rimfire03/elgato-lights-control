@@ -17,6 +17,24 @@ via leur API HTTP locale (port 9123, la même que celle d'Elgato Control Center)
 Configuration enregistrée dans `%APPDATA%\obs-studio\plugin_config\obs-elgato-lights\config.json`.
 Le dock « Elgato Lights » apparaît dans OBS (menu *Docks*).
 
+## Support et signalement de bugs
+
+Les bugs et demandes d'évolution se signalent dans les
+[Issues du dépôt](https://github.com/Rimfire03/elgato-lights-control/issues). Merci d'indiquer la version du plugin,
+la version d'OBS, le système, le modèle de lampe et, si possible, les lignes `obs-elgato-lights` du log OBS
+(Aide > Fichiers de log).
+
+## Transparence : développement assisté par IA
+
+Ce plugin a été développé avec l'assistance de **Claude Code (Anthropic)** : l'IA a rédigé la majeure partie du code
+(client de l'API Elgato, interface Qt, moteur de règles, installateur, scripts de build et de packaging) sous la
+direction de l'auteur, qui a défini les besoins, relu et testé le résultat sur son installation d'OBS.
+
+## Mentions
+
+Plugin tiers, indépendant : il n'est ni affilié ni approuvé par OBS Project ni par Elgato / Corsair.
+« OBS Studio » et « Elgato » sont des marques de leurs propriétaires respectifs.
+
 ## Soutenir le projet
 
 Si ce plugin vous est utile, vous pouvez m'offrir un café :
@@ -25,7 +43,7 @@ Si ce plugin vous est utile, vous pouvez m'offrir un café :
 
 ## Mises à jour
 
-Au démarrage d'OBS, le plugin interroge la dernière release GitHub (`Rimfire03/OBS-elgato`). Si une version plus
+Au démarrage d'OBS, le plugin interroge la dernière release GitHub (`Rimfire03/elgato-lights-control`). Si une version plus
 récente existe, une fenêtre propose de mettre à jour (ou d'ignorer cette version). Sous Windows, l'installateur est
 téléchargé (SHA-256 vérifié), puis il attend la fermeture d'OBS, remplace le plugin et relance OBS. Sous macOS, la
 page de la release s'ouvre. Désactivable dans le dock (case « Vérifier les mises à jour »).

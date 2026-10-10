@@ -23,7 +23,7 @@
 
 #include "engine.hpp"
 
-static const char *kLatestReleaseApi = "https://api.github.com/repos/Rimfire03/OBS-elgato/releases/latest";
+static const char *kLatestReleaseApi = "https://api.github.com/repos/Rimfire03/elgato-lights-control/releases/latest";
 
 static QString U(const char *s)
 {
@@ -59,6 +59,7 @@ void Updater::checkAtStartup()
 		return;
 
 	QNetworkRequest req{QUrl(QString::fromUtf8(kLatestReleaseApi))};
+	req.setAttribute(QNetworkRequest::RedirectPolicyAttribute, QNetworkRequest::NoLessSafeRedirectPolicy);
 	req.setRawHeader("Accept", "application/vnd.github+json");
 	req.setRawHeader("User-Agent", "obs-elgato-lights-updater");
 	req.setTransferTimeout(8000);

@@ -15,7 +15,11 @@ public:
 	Config &config() { return cfg_; }
 	ElgatoClient &client() { return client_; }
 
-	void save() { cfg_.save(); emit configChanged(); }
+	void save()
+	{
+		cfg_.save();
+		emit configChanged();
+	}
 
 	// Direct control (lights tab / groups tab).
 	void setLight(const QString &lightId, const LightPatch &patch);

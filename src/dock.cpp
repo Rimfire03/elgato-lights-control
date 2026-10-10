@@ -113,7 +113,9 @@ void PatchControls::setState(const LightState &st, bool reachable)
 // ------------------------------------------------------------------ RuleDialog
 
 RuleDialog::RuleDialog(Engine &engine, const RuleDef &rule, QWidget *parent)
-	: QDialog(parent), engine_(engine), rule_(rule)
+	: QDialog(parent),
+	  engine_(engine),
+	  rule_(rule)
 {
 	setWindowTitle(U("Règle d'automatisation"));
 	auto *root = new QVBoxLayout(this);
@@ -150,7 +152,9 @@ RuleDialog::RuleDialog(Engine &engine, const RuleDef &rule, QWidget *parent)
 	root->addWidget(elseBox_);
 	connect(hasElse_, &QCheckBox::toggled, elseBox_, &QWidget::setVisible);
 
-	auto updateScene = [this]() { scene_->setEnabled(cond_->currentData().toString() == "scene"); };
+	auto updateScene = [this]() {
+		scene_->setEnabled(cond_->currentData().toString() == "scene");
+	};
 	connect(cond_, &QComboBox::currentIndexChanged, this, updateScene);
 	updateScene();
 
@@ -292,9 +296,8 @@ QWidget *ElgatoDock::buildLightsTab()
 		scanLabel_->setText(U("Recherche en cours…"));
 		engine_.client().scanNetwork();
 	});
-	connect(&engine_.client(), &ElgatoClient::scanProgress, this, [this](int d, int t) {
-		scanLabel_->setText(U("Recherche en cours… %1/%2").arg(d).arg(t));
-	});
+	connect(&engine_.client(), &ElgatoClient::scanProgress, this,
+		[this](int d, int t) { scanLabel_->setText(U("Recherche en cours… %1/%2").arg(d).arg(t)); });
 	connect(&engine_.client(), &ElgatoClient::scanFinished, this, [this]() {
 		scanBtn_->setEnabled(true);
 		scanLabel_->setText(U("Recherche terminée."));
@@ -382,8 +385,8 @@ void ElgatoDock::rebuildLights()
 				if (x.id != id)
 					continue;
 				bool ok = false;
-				const QString n = QInputDialog::getText(this, U("Renommer"), U("Nom :"), QLineEdit::Normal,
-									x.name, &ok);
+				const QString n = QInputDialog::getText(this, U("Renommer"), U("Nom :"),
+									QLineEdit::Normal, x.name, &ok);
 				if (ok && !n.trimmed().isEmpty()) {
 					x.name = n.trimmed();
 					engine_.save();
@@ -446,7 +449,8 @@ void ElgatoDock::rebuildGroups()
 
 		auto *ctl = new PatchControls();
 		const QString gid = g.id;
-		connect(ctl, &PatchControls::patch, this, [this, gid](const LightPatch &p) { engine_.setGroup(gid, p); });
+		connect(ctl, &PatchControls::patch, this,
+			[this, gid](const LightPatch &p) { engine_.setGroup(gid, p); });
 		bl->addWidget(ctl);
 
 		bl->addWidget(new QLabel(U("Membres :")));
@@ -556,8 +560,8 @@ void ElgatoDock::rebuildRules()
 			cond = U("caméra virtuelle active");
 		else
 			cond = U("scène = ") + r.scene;
-		QString text = QString("%1\n  %2 : %3").arg(r.name, U("si ") + cond,
-							 actionSummary(engine_.config(), r.thenAction));
+		QString text = QString("%1\n  %2 : %3")
+				       .arg(r.name, U("si ") + cond, actionSummary(engine_.config(), r.thenAction));
 		if (r.hasElse)
 			text += U("\n  sinon : ") + actionSummary(engine_.config(), r.elseAction);
 		auto *it = new QListWidgetItem(text);

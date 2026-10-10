@@ -72,7 +72,9 @@ void Config::save() const
 	for (const LightDef &l : lights)
 		la.append(QJsonObject{{"id", l.id}, {"name", l.name}, {"host", l.host}, {"port", l.port}});
 	for (const GroupDef &g : groups)
-		ga.append(QJsonObject{{"id", g.id}, {"name", g.name}, {"lights", QJsonArray::fromStringList(g.lightIds)}});
+		ga.append(QJsonObject{{"id", g.id},
+				      {"name", g.name},
+				      {"lights", QJsonArray::fromStringList(g.lightIds)}});
 	for (const RuleDef &r : rules)
 		ra.append(QJsonObject{{"id", r.id},
 				      {"name", r.name},

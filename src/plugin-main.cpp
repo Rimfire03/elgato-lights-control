@@ -1,4 +1,4 @@
-/*
+﻿/*
 Elgato Lights Control - OBS plugin
 Controls Elgato Key Light / Light Strip devices (same ones as Elgato Control Center)
 through their local HTTP API, with groups and event-driven automation rules.
@@ -17,6 +17,7 @@ the Free Software Foundation; either version 2 of the License, or
 
 #include "dock.hpp"
 #include "engine.hpp"
+#include "updater.hpp"
 
 OBS_DECLARE_MODULE()
 OBS_MODULE_USE_DEFAULT_LOCALE(PLUGIN_NAME, "en-US")
@@ -35,6 +36,7 @@ static void frontendEvent(enum obs_frontend_event event, void *)
 		obs_frontend_add_dock_by_id("elgato-lights-control", "Elgato Lights", dock);
 		obs_log(LOG_INFO, "dock added");
 		g_engine->evaluateRules();
+		(new Updater(*g_engine, g_engine))->checkAtStartup();
 		return;
 	}
 	if (event == OBS_FRONTEND_EVENT_EXIT) {

@@ -85,7 +85,12 @@ void Config::save() const
 				      {"hasElse", r.hasElse},
 				      {"else", actionToJson(r.elseAction)}});
 
-	QJsonObject root{{"version", 1}, {"lights", la}, {"groups", ga}, {"rules", ra}};
+	QJsonObject root{{"version", 1},
+			 {"lights", la},
+			 {"groups", ga},
+			 {"rules", ra},
+			 {"checkUpdates", checkUpdates},
+			 {"skippedVersion", skippedVersion}};
 	QFile f(path);
 	if (f.open(QIODevice::WriteOnly | QIODevice::Truncate))
 		f.write(QJsonDocument(root).toJson(QJsonDocument::Indented));
@@ -102,6 +107,8 @@ void Config::load()
 	if (path.isEmpty() || !f.open(QIODevice::ReadOnly))
 		return;
 	const QJsonObject root = QJsonDocument::fromJson(f.readAll()).object();
+	checkUpdates = root.value("checkUpdates").toBool(true);
+	skippedVersion = root.value("skippedVersion").toString();
 
 	for (const QJsonValue &v : root.value("lights").toArray()) {
 		const QJsonObject o = v.toObject();

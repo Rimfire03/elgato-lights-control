@@ -44,6 +44,10 @@ struct Config {
 	QList<GroupDef> groups;
 	QList<RuleDef> rules;
 
+	// Mises a jour du plugin
+	bool checkUpdates = true;
+	QString skippedVersion;
+
 	const LightDef *light(const QString &id) const;
 	const GroupDef *group(const QString &id) const;
 

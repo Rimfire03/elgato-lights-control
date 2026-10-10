@@ -248,6 +248,14 @@ ElgatoDock::ElgatoDock(Engine &engine, QWidget *parent) : QWidget(parent), engin
 	logLabel_->setWordWrap(true);
 	root->addWidget(logLabel_);
 
+	auto *updates = new QCheckBox(U("Vérifier les mises à jour du plugin au démarrage"));
+	updates->setChecked(engine_.config().checkUpdates);
+	connect(updates, &QCheckBox::toggled, this, [this](bool on) {
+		engine_.config().checkUpdates = on;
+		engine_.config().save();
+	});
+	root->addWidget(updates);
+
 	connect(&engine_, &Engine::configChanged, this, [this]() {
 		rebuildLights();
 		rebuildGroups();

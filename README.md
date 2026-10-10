@@ -1,4 +1,4 @@
-# Elgato Lights Control (plugin OBS)
+﻿# Elgato Lights Control (plugin OBS)
 
 Plugin natif OBS Studio (C++ / Qt6) qui pilote les lampes Elgato (Key Light, Key Light Air, Ring Light, Light Strip…)
 via leur API HTTP locale (port 9123, la même que celle d'Elgato Control Center).
@@ -46,3 +46,4 @@ cmake --build --preset windows-x64 --config RelWithDebInfo
 
 Installation : copier `build_x64\rundir\RelWithDebInfo\obs-elgato-lights\` dans
 `C:\Program Files\obs-studio\` (le dossier contient `obs-plugins\64bit\*.dll`), puis relancer OBS.
+

@@ -1,5 +1,7 @@
 # Elgato Lights Control (plugin OBS)
 
+[![Release](https://img.shields.io/github/v/release/Rimfire03/elgato-lights-control)](https://github.com/Rimfire03/elgato-lights-control/releases/latest) [![Téléchargements](https://img.shields.io/github/downloads/Rimfire03/elgato-lights-control/total)](https://github.com/Rimfire03/elgato-lights-control/releases) [![Build](https://img.shields.io/github/actions/workflow/status/Rimfire03/elgato-lights-control/push.yaml)](https://github.com/Rimfire03/elgato-lights-control/actions/workflows/push.yaml) [![Licence GPL-2.0](https://img.shields.io/github/license/Rimfire03/elgato-lights-control)](https://github.com/Rimfire03/elgato-lights-control/blob/main/LICENSE) ![C++](https://img.shields.io/badge/C%2B%2B-Qt6-00599C?logo=cplusplus&logoColor=white) ![OBS Studio](https://img.shields.io/badge/OBS%20Studio-plugin-302E31?logo=obsstudio&logoColor=white)
+
 [![Buy Me A Coffee](https://img.shields.io/badge/Buy%20Me%20A%20Coffee-Donate-orange.svg?logo=buy-me-a-coffee&logoColor=white)](https://buymeacoffee.com/slide598b)
 
 Plugin natif OBS Studio (C++ / Qt6) qui pilote les lampes Elgato (Key Light, Key Light Air, Ring Light, Light Strip…)
